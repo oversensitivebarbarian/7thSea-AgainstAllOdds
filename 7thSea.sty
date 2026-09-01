@@ -1,0 +1,417 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 7TH SEA RPG TEMPLATE
+% A LaTeX package for creating 7th Sea RPG sourcebooks.
+%
+% Usage:
+%   \documentclass[10pt,twoside,openany]{book}
+%   \usepackage{7thSea}              % A4, default (print — blank page before chapters)
+%   \usepackage[jisb5]{7thSea}       % JIS B5 (print — blank page before chapters)
+%   \usepackage[flat]{7thSea}        % A4, ebook (no blank page, footer text on both sides)
+%   \usepackage[flatjisb5]{7thSea}   % JIS B5, ebook (no blank page, footer text on both sides)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{7thSea}[2026/07/25 v1.0 7th Sea RPG sourcebook template]
+
+%%%% FORMAT OPTIONS %%%%
+\newif\ifSeventhSeaJISFormat
+\SeventhSeaJISFormatfalse
+
+% "Flat" format: for electronic publications. Removes the extra blank
+% page LaTeX inserts before a chapter to force it onto a recto page,
+% and prints both footer texts (book title + chapter name) on every
+% page instead of splitting them across even/odd pages.
+\newif\ifSeventhSeaFlatFormat
+\SeventhSeaFlatFormatfalse
+
+\DeclareOption{a4}{\SeventhSeaJISFormatfalse\SeventhSeaFlatFormatfalse}
+\DeclareOption{jisb5}{\SeventhSeaJISFormattrue\SeventhSeaFlatFormatfalse}
+\DeclareOption{flat}{\SeventhSeaJISFormatfalse\SeventhSeaFlatFormattrue}
+\DeclareOption{flatjisb5}{\SeventhSeaJISFormattrue\SeventhSeaFlatFormattrue}
+\DeclareOption*{\PackageWarning{7thSea}{Unknown option '\CurrentOption'}}
+\ExecuteOptions{a4}
+\ProcessOptions\relax
+
+% Force two-column typesetting for A4 without needing a documentclass
+% option (mirrors what the "twocolumn" class option does internally).
+\ifSeventhSeaJISFormat\else
+\@twocolumntrue
+\fi
+
+%%%% ESSENTIAL PACKAGES %%%%
+\RequirePackage[english]{babel}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{expl3}
+\RequirePackage{xparse}
+\RequirePackage{etoolbox}
+\RequirePackage{xstring}
+\RequirePackage{microtype}
+
+%%%% FONT CONFIGURATION %%%%
+\RequirePackage{palatino}
+\RequirePackage{avant}
+
+%%%% COLOR %%%%
+\RequirePackage[table]{xcolor}
+\definecolor{baseColor}{HTML}{2E55A6}
+\definecolor{colorText}{HTML}{2E55A6}
+\definecolor{theah}{HTML}{2E55A6}
+\definecolor{khitai}{HTML}{39622E}
+\definecolor{1knations}{HTML}{A00909}
+\definecolor{newWorld}{HTML}{C8A000}
+\definecolor{ifri}{HTML}{C95000}
+\definecolor{crescentEmpire}{HTML}{8F431B}
+\definecolor{citiesOfWonder}{HTML}{782FA9}
+\definecolor{pirateNations}{HTML}{540304}
+\definecolor{priceOfArrogance}{HTML}{285E79}
+\colorlet{specialNotesTextColor}{white}
+
+%%%% TABLE PACKAGES %%%%
+% tabularray replaces tabularx+colortbl — no TeX Live 2025 issues
+\RequirePackage{tabularray}
+\UseTblrLibrary{varwidth}
+
+%%%% GRAPHICS & BOXES %%%%
+\RequirePackage{tikz}
+\RequirePackage[most]{tcolorbox}
+\tcbset{sharp corners, boxrule=0pt, frame hidden}
+\RequirePackage[framemethod=TikZ]{mdframed}
+
+\RequirePackage{eso-pic}
+\RequirePackage{graphicx}
+\RequirePackage{ifthen}
+
+\AddToShipoutPictureBG{%
+	\ifthenelse{\isodd{\value{page}}}{%
+		\includegraphics[width=\paperwidth,height=\paperheight]{img/page-backgrounds/paper.jpg}%
+	}{%
+		\includegraphics[width=\paperwidth,height=\paperheight]{img/page-backgrounds/paper2.jpg}%
+	}%
+}
+
+%%%% THEME SYSTEM %%%%
+\ExplSyntaxOn
+\cs_new:Npn \set_theme_variables:n #1 {
+	\colorlet{baseColor}{#1}
+	\colorlet{colorText}{#1}
+	\tl_set:Nn \l_theme_tl {#1}
+	\str_case:nnF {#1} {
+		{newWorld} { \colorlet{specialNotesTextColor}{black} }
+	}
+	{ \colorlet{specialNotesTextColor}{white} }
+}
+\cs_new_eq:NN \SetThemeVariables \set_theme_variables:n
+\cs_new:Npn \gettheme { \tl_use:N \l_theme_tl }
+\ExplSyntaxOff
+
+\newcommand{\setTheme}[1]{%
+	\IfStrEqCase{#1}{%
+		{theah}            {\SetThemeVariables{theah}}%
+		{khitai}           {\SetThemeVariables{khitai}}%
+		{1knations}        {\SetThemeVariables{1knations}}%
+		{newWorld}         {\SetThemeVariables{newWorld}}%
+		{ifri}             {\SetThemeVariables{ifri}}%
+		{crescentEmpire}   {\SetThemeVariables{crescentEmpire}}%
+		{citiesOfWonder}   {\SetThemeVariables{citiesOfWonder}}%
+		{pirateNations}    {\SetThemeVariables{pirateNations}}%
+		{priceOfArrogance} {\SetThemeVariables{priceOfArrogance}}%
+	}%
+}
+
+%%%% SECTION FORMATTING %%%%
+\RequirePackage{titlesec}
+\RequirePackage{titletoc}
+
+% In print formats a new chapter must start on a recto (odd) page, which
+% can insert a blank page. In "flat" (ebook) formats we just start a new
+% page, with no blank page forced in to reach an odd page number.
+\pretocmd{\chapter}{\ifSeventhSeaFlatFormat\clearpage\else\cleardoublepage\fi}{}{}
+
+\titleformat{\chapter}[display]
+{\normalfont\Huge\filcenter}{}{0pt}
+{\vspace*{0.01\textheight}\MakeUppercase}
+[\vskip-12pt{\color{baseColor}\rule{\linewidth}{1pt}}]
+
+\titleformat{\section}[block]{\normalfont\LARGE}{}{0pt}{\MakeUppercase}
+\titleformat{\subsection}[block]{\normalfont\Large}{}{0pt}{\MakeUppercase}
+\titleformat{\subsubsection}[block]{\normalfont\large}{}{0pt}{\MakeUppercase}
+
+%%%% TABLE OF CONTENTS %%%%
+\renewcommand\tableofcontents{%
+	\chapter*{\centering\normalfont\Huge\contentsname}
+	\@starttoc{toc}%
+}
+
+\titlecontents{part}[0pt]
+{\addvspace{.06in}\large\bfseries\rmfamily}
+{\partname\ \thecontentslabel:~}{}
+{\hfill\contentspage}
+[\addvspace{-.03in}\titleline{\color{baseColor}\titlerule[1pt]}\addvspace{.05in}]
+
+\titlecontents{chapter}[0pt]
+{\addvspace{.04in}\large\scshape\rmfamily\color{baseColor}}
+{}{}{\hfill\contentspage}
+[\addvspace{-.03in}\titleline{\color{black}\titlerule[0.5pt]}\addvspace{.05in}]
+
+\titlecontents{section}[0pt]{\normalsize\scshape\rmfamily}
+{}{}{\titlerule*{.}\contentspage}
+\titlecontents{subsection}[10pt]{\normalsize\scshape\rmfamily}
+{}{}{\titlerule*{.}\contentspage}
+\titlecontents{subsubsection}[15pt]{\normalsize\scshape\rmfamily}
+{}{}{\titlerule*{.}\contentspage}
+
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{-1}
+
+%%%% NICETABLE %%%%
+% Uses tabularray — no colortbl/rowcolors, no TeX Live 2025 issues.
+% Usage:
+%   \begin{NiceTable}{colspec}                        — plain table
+	%   \begin{NiceTable}[My Header]{colspec}             — with header
+		%   \begin{NiceTable}[My Header][blue!20]{colspec}    — header + row color
+			
+			\NewDocumentEnvironment{NiceTable}{o O{white} m}{%
+				\par\vspace{9pt plus 3pt minus 3pt}\noindent
+				\IfValueT{#1}{{\large\bfseries\sffamily #1\nopagebreak}\par\vspace{5pt plus 2pt minus 2pt}\noindent}%
+				\small\sffamily
+				\begin{tblr}{
+						colspec={#3},
+						row{odd}={#2},
+						row{even}={},
+						rowsep=3pt,
+						row{1}={abovesep=8pt, belowsep=8pt},
+					}%
+				}{%
+				\end{tblr}%
+				\vspace{9pt plus 3pt minus 3pt}%
+			}
+			
+			%%%% CITATION %%%%
+			\NewDocumentEnvironment{Citation}{o m}{%
+				\par\vspace{1em}
+				\begin{center}\itshape ``#2''\end{center}
+				\IfValueT{#1}{\par\noindent\hfill{\itshape\textemdash\ #1}\par}
+				\vspace{0.5em}
+			}{}
+			
+			%%%% LAYOUT HELPERS %%%%
+			\RequirePackage{float}
+			\RequirePackage{framed}
+			\newfloat{custombox}{tp}{lob}
+			\floatname{custombox}{Box}
+			
+			\NewDocumentCommand{\placetopbox}{}{%
+				\begin{tikzpicture}[remember picture, overlay]
+					\checkoddpage
+					\ifoddpage
+					\fill[baseColor]
+					([xshift=\columnwidth+\mysidemargin+\mycolumnspace]current page.north west)
+					rectangle ++(\columnwidth,-\mytopmargin);
+					\else
+					\fill[baseColor]
+					([xshift=-\columnwidth-\mysidemargin-\mycolumnspace]current page.north east)
+					rectangle ++(-\columnwidth,-\mytopmargin);
+					\fi
+				\end{tikzpicture}%
+			}
+			
+			%%%% COLORED BOXES %%%%
+			\newtcolorbox{bgbox}{
+				colback=baseColor, colframe=baseColor,
+				width=\columnwidth, coltext=specialNotesTextColor,
+				left=5pt, right=5pt, top=2pt, bottom=2pt
+			}
+			\newcommand{\BGHeader}[1]{%
+				\begin{bgbox}\noindent\large\textsc{\MakeUppercase{#1}}\end{bgbox}%
+			}
+			\newcommand{\Quirk}[2]{\medskip\noindent\textsc{#1}: \textit{#2}}
+			
+			\NewDocumentEnvironment{ColorBox}{m}{%
+				\bigskip\noindent
+				\begin{tcolorbox}[
+					enhanced, colback=baseColor!10, colframe=baseColor,
+					coltext=black, boxrule=0.4pt, sharp corners,
+					left=8pt, right=8pt, top=6pt, bottom=6pt,
+					frame code={
+						\draw[color=baseColor, line width=0.4pt]
+						(frame.south west) rectangle (frame.north east);
+					}]
+					#1
+				\end{tcolorbox}
+			}{}
+			
+			%%%% SPECIAL NOTES %%%%
+			\newsavebox{\specialnotesbox}
+			\newsavebox{\overlaytempbox}
+			\newlength{\specialnotesheight}
+			\newlength{\specialnotestotalheight}
+			\newlength{\specialnotesxshift}
+			\setlength{\specialnotesxshift}{-15pt}
+			
+			\newcommand{\drawcoverimage}[4]{%
+				\savebox{\overlaytempbox}{\includegraphics[width=#2]{#1}}%
+				\ifdim\ht\overlaytempbox<#3%
+				\savebox{\overlaytempbox}{\includegraphics[height=#3]{#1}}%
+				\fi
+				\node[#4]{\usebox{\overlaytempbox}};%
+			}
+			
+			\NewDocumentEnvironment{SpecialNotes}{O{} m +b}{%
+				\edef\overlaypath{#1}%
+				\savebox{\specialnotesbox}{%
+					\begin{minipage}{\columnwidth}
+						\begin{mdframed}[
+							linewidth=0pt,
+							innerleftmargin=0pt, innerrightmargin=5pt,
+							innertopmargin=6pt,  innerbottommargin=6pt,
+							backgroundcolor=none, skipabove=0pt, skipbelow=0pt]
+							\begin{minipage}{\dimexpr\columnwidth-32pt\relax}
+								\begin{center}
+									{\color{specialNotesTextColor}\Large\MakeUppercase{#2}\par}
+								\end{center}
+								\normalsize
+								\begin{center}
+									\begin{tikzpicture}
+										\draw[specialNotesTextColor, dotted, line width=6pt,
+										dash pattern=on 1pt off 2pt]
+										(0,0) -- (\columnwidth,0);
+									\end{tikzpicture}
+								\end{center}
+								\setlength{\parskip}{1em}
+								\color{specialNotesTextColor}
+								#3
+								\vspace{2em}
+							\end{minipage}
+						\end{mdframed}
+					\end{minipage}%
+				}%
+				\setlength{\specialnotesheight}{\dimexpr\ht\specialnotesbox+\dp\specialnotesbox\relax}%
+				\setlength{\specialnotestotalheight}{\dimexpr\mytopmargin+\specialnotesheight\relax}%
+				\begin{tikzpicture}[remember picture, overlay]
+					\node[inner sep=0pt, outer sep=0pt, anchor=north west]
+					(specialnotesanchor) at (0,0) {};
+				\end{tikzpicture}
+				\begin{tikzpicture}[remember picture, overlay]
+					\fill[baseColor]
+					([xshift=\specialnotesxshift]specialnotesanchor.north west |- current page.north)
+					rectangle ++(\columnwidth,-\specialnotestotalheight);
+					\ifx\overlaypath\empty\else
+					\begin{scope}
+						\clip
+						([xshift=\specialnotesxshift]specialnotesanchor.north west |- current page.north)
+						rectangle ++(\columnwidth,-\specialnotestotalheight);
+						\drawcoverimage{\overlaypath}{\columnwidth}{\specialnotestotalheight}{%
+							opacity=0.15, inner sep=0pt, outer sep=0pt, anchor=north,
+							at={([xshift=\specialnotesxshift+0.5\columnwidth]
+								specialnotesanchor.north west |- current page.north)}%
+						}
+					\end{scope}
+					\fi
+				\end{tikzpicture}
+				\noindent\usebox{\specialnotesbox}\par
+				\vspace{2\baselineskip}
+			}{}
+			
+			%%%% MISC %%%%
+			\RequirePackage{lipsum}
+			\RequirePackage[hidelinks]{hyperref}
+			
+			%%%% PAGE LAYOUT %%%%
+			\ExplSyntaxOn
+			\dim_new:N \c_my_top_margin_dim
+			\dim_set:Nn \c_my_top_margin_dim { 0.7in }
+			\dim_new:N \c_my_bottom_margin_dim
+			\ifSeventhSeaJISFormat
+			\dim_set:Nn \c_my_bottom_margin_dim { 0.73in }
+			\else
+			\dim_set:Nn \c_my_bottom_margin_dim { 0.8in }
+			\fi
+			\dim_new:N \c_my_side_margin_dim
+			\dim_set:Nn \c_my_side_margin_dim { 0.7in }
+			\dim_new:N \c_my_column_space_dim
+			\dim_set:Nn \c_my_column_space_dim { 0.3in }
+			\tl_new:N \l_theme_tl
+			\tl_set:Nn \l_theme_tl {theah}
+			\newlength{\mytopmargin}
+			\newlength{\mybottommargin}
+			\newlength{\mysidemargin}
+			\newlength{\mycolumnspace}
+			\setlength{\mytopmargin}{\c_my_top_margin_dim}
+			\setlength{\mybottommargin}{\c_my_bottom_margin_dim}
+			\setlength{\mysidemargin}{\c_my_side_margin_dim}
+			\setlength{\mycolumnspace}{\c_my_column_space_dim}
+			\ExplSyntaxOff
+			
+			\ifSeventhSeaJISFormat
+			\RequirePackage[b5j,
+			inner=\mysidemargin, outer=\mysidemargin,
+			tmargin=\mytopmargin,  bmargin=\mybottommargin
+			]{geometry}
+			\else
+			\RequirePackage[a4paper,
+			lmargin=\mysidemargin, rmargin=\mysidemargin,
+			tmargin=\mytopmargin,  bmargin=\mybottommargin
+			]{geometry}
+			\fi
+			
+			%%%% HEADERS & FOOTERS %%%%
+			\RequirePackage{fancyhdr}
+			\RequirePackage{changepage}
+			\pagestyle{fancy}
+			\fancyhf{}
+			\renewcommand{\headrulewidth}{0pt}
+			
+			% Footer scroll graphic width and page-number vertical offset differ per format.
+			\ifSeventhSeaJISFormat
+			\newcommand{\footerScrollWidth}{20cm}
+			\newlength{\footerPageYshift}\setlength{\footerPageYshift}{0.4in}
+			\else
+			\newcommand{\footerScrollWidth}{\paperwidth}
+			\newlength{\footerPageYshift}\setlength{\footerPageYshift}{0.42in}
+			\fi
+			
+			\newcommand{\sevenSeaFooterBlock}{%
+				\ifSeventhSeaFlatFormat
+				% Flat (ebook) format: the same title (left) and current chapter
+				% (right) shown by the print version appear on every page — there
+				% is no even/odd page distinction to typeset for.
+				\fancyfoot[L]{%
+					\raisebox{-1em}[0pt][0pt]{%
+						\hspace{3em}\textcolor{baseColor}{\small \bookTitleFooter}%
+					}%
+				}%
+				\fancyfoot[R]{%
+					\raisebox{-1em}[0pt][0pt]{%
+						\textcolor{baseColor}{\small \leftmark}\hspace{3em}%
+					}%
+				}%
+				\else
+				\fancyfoot[LE]{%
+					\raisebox{-1em}[0pt][0pt]{%
+						\hspace{3em}\textcolor{baseColor}{\small \bookTitleFooter}%
+					}%
+				}%
+				\fancyfoot[RO]{%
+					\raisebox{-1em}[0pt][0pt]{%
+						\textcolor{baseColor}{\small \leftmark}\hspace{3em}%
+					}%
+				}%
+				\fi
+				\fancyfoot[C]{%
+					\begin{tikzpicture}[remember picture,overlay]
+						\node[inner sep=0pt,anchor=south,yshift=\footerPageYshift] at (current page.south) {\thepage};
+						\node[inner sep=0pt,anchor=south] at (current page.south) {%
+							\includegraphics[width=\footerScrollWidth]{img/\gettheme/footerscroll}%
+						};
+					\end{tikzpicture}%
+				}%
+			}
+			
+			\sevenSeaFooterBlock
+			
+			\fancypagestyle{plain}{%
+				\renewcommand{\headrulewidth}{0pt}
+				\fancyhf{}
+				\sevenSeaFooterBlock
+			}
+			
+			\endinput

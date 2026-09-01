@@ -1,0 +1,225 @@
+\documentclass[10pt,twoside,openany]{book}
+\usepackage[flat]{7thSea}
+\usepackage{tikz}
+
+%%%% BOOK TITLE %%%%
+\newcommand{\bookTitleFooter}{Against All Odds}
+
+\hypersetup{
+	pdftitle={Against All Odds},
+	pdfauthor={Oversensitive Barbarian},
+	pdfsubject={7th Sea 2nd ed rules mod},
+	pdfkeywords={7th Sea, rules mod, Explorer's Society, Against all odds},
+	pdfcreator={},
+	pdfproducer={}
+}
+%%%% DOCUMENT METADATA %%%%
+\title{\Huge Against All Odds \\
+	\small 7th Sea 2nd ed rules mod}
+\author{}
+\date{}
+
+\begin{document}
+	
+	%\setTheme{THEME}  % Here set theme for the whole book: khitai, 1knations, newWorld, ifri, crescentEmpire, citiesOfWonder, pirateNations, priceOfArrogance, theah (default)
+	\thispagestyle{empty}
+	\begin{tikzpicture}[remember picture, overlay]
+		\node[inner sep=0pt] at (current page.center) {\includegraphics[width=\paperwidth,height=\paperheight]{AAO-cover2.jpg}};
+	\end{tikzpicture}
+	\clearpage
+	
+	
+	\chapter{Core mechanics}
+	\markboth{7th Sea 2nd ed rules mod}{} % Use this to get original capitalization in footer.
+	
+	This document describes changes made to the basic rules of 7th Sea 2nd edition.
+	The fundamental change is a return to R\&K in modernized form, superseding the Raises system.
+	If not stated otherwise, the conversion is one Raise = one Action Point.
+	
+	\section{Risk resolution}
+	
+	In order to resolve a risk a Hero takes number of dice which is sum of Trait and Skill, plus any additional die from Advantages or Sorcerry.
+	
+	\vspace{1em}
+	\textbf{After a roll keep only EVEN results - each even die is Action Point (AP)}
+	
+	\vspace{1em}
+	To call an action a success the number of AP needs to be equal or greater than Difficulty Level.
+	
+	\subsubsection{Opportunities and consequences}
+	Side results is opportunities are just simple tests, linked with consequences. Ie. Reaching out a document in burning room is DL 3 with hidden consequence of burning - 2 wounds. If result is equal 2 - document is reached but Hero suffers 2 wounds. If Result is 3 - only one wound suffered - any extra result prevents a wound. If result is lower than DL - Hero gains 2 wounds.
+	
+	
+	\subsection{Determining DL for GM} 
+	Multiple DL by 2. If result is grater than Hero die pool - it is hard, the bigger difference the harder to achieve. If it is lower than die pool - it is easy - same rules apply.
+	
+	
+	\begin{NiceTable}[Difficulty levels][baseColor!30]{X[m] Q[m]}
+		\SetRow{bg=baseColor, fg=specialNotesTextColor, font=\bfseries} Level & No. of successes \\
+		Easy & 2 \\
+		Challenging & 3\\
+		Hard & 4\\
+		Very hard & 5\\
+		Impossible & 6
+	\end{NiceTable}
+	
+	\newpage	
+	\section{Skill ranks}
+	
+	\noindent \textbf{Rank 4:} after applying the Rank 3 reroll, for every 2 successes (AP) you obtained you gain \textbf{1 additional success} 
+	
+	\section{Duelist maneuvers costs}
+	
+	\subsection{Basic maneuvers}
+	Slash, Parry, Feint, Bash, Riposte: \textbf{2 AP}.
+	
+	\subsection{Lunge}
+	Base cost \textbf{2 AP}, but more can be spent. Wounds = Weaponry + AP spent \textbf{above} 2. Unblockable.
+	
+	\subsection{Special maneuvers}
+	Style Bonuses (e.g. Iron Riposte): \textbf{3 AP}.
+	
+	
+	\subsection{Sabat Gambit}
+	Replaces Lunge in the Sabat Style. Base cost \textbf{3 AP}, more can be spent. Wounds = Weaponry + Finesse + (AP spent \textbf{above} 3). Unblockable.
+	
+	\section{Non-duelist defense}
+	A non-duelist (without the Duelist Academy Advantage) when crossing a blade with a duelist block exactly 1 wound using 1 AP on action. Any Hero can spend multiple AP per action.
+	
+	\section{Hero Points and Danger Points}
+	
+	After rolling a test if you end up with dice above threshold, the GM can choose
+	to buy them from you. For each die the GM chooses
+	to purchase in this fashion, you gain 1 Hero Point...
+	and he gains 1 Danger Point.
+	
+	\subsection{Using Danger Points}
+	\begin{itemize}
+		\item Remove 1 Action Point for
+		a Risk or Round. This affects all Heroes in
+		the Scene.
+		\item Add two dice to any Villain’s die pool.
+		\item Activate a Brute Squad’s special ability.
+		\item Activate a Villain’s special ability.
+		\item Murder. If a Hero becomes helpless, a Villain
+		can spend a Danger Point to murder that
+		character. See Helpless (see page 181).
+		The GM can spend additional Danger Points to add
+		multiple dice to a Villain’s die pool, but can’t spend
+		multiple Danger Points on any other option.
+	\end{itemize}
+	
+	
+	\section{Advantages}
+	\markboth{7th Sea 2nd ed rules mod}{}
+	
+	\subsection{Modified Advantages}
+	
+	\BGHeader{Strength of Ten}
+	When you perform a feat of raw strength (lifting
+	a castle portcullis, holding a door closed against a
+	battering ram on the other side, etc.), spend a Hero
+	Point to add +1 die to pool
+	for each level of your Brawn or your Resolve, whichever is
+	greater. For example, if you are trying to keep a crum-
+	bling wall from collapsing so that your friends can
+	escape, spend a Hero Point to add a number of dice to the pool equal to your Brawn or Resolve score, whichever is greater.
+	
+	\BGHeader{Academy}
+	You studied strategy, horsemanship, and soldiering at
+	one of Théah’s many military academies. When you
+	make a Risk using Athletics, Warfare or Ride, add +1 die to the pool\\
+	
+	\BGHeader{Lyceum (Innate)}
+	You studied rhetoric and debate, and refined your
+	social graces at one of Théah’s many lyceums, finishing
+	schools typically reserved for the social and noble elite.
+	When you make a Risk using Convince, Intimidate, or
+	Tempt, add +1 die to the pool\\
+	
+	\BGHeader{University (Innate)}
+	You attended one of Théah’s formal universities and
+	are familiar with many academic fields of study such
+	as mathematics, architecture, and astronomy. When
+	you make a Risk using Scholarship, Empathy, or
+	Notice, add +1 die to the pool\\
+	
+	\subsection{Removed advantages and replacements}
+	
+	Removed \textbf{Team Player} - replaced with \textbf{The Provocateur}
+	
+	\noindent Removed \textbf{Opportunists} - replaced with \textbf{Look there}
+	
+	
+	\BGHeader{The Provocateur}
+	In a Duel, provokes the opponent into making a failed attack that costs them AP equal to your Panache. \textbf{Once per Scene.}	
+	
+	\BGHeader{Look there}
+	\textbf{One shared attempt per Scene} --- not per character. If one Hero uses it, the rest of the party loses access for that Scene, even if they also have the Advantage. Requires a narrative opportunity to create a distraction - the GM judges whether circumstances allow it.
+	
+	\vspace{1em}
+	Mechanics: the opponent rolls 1 die. An \textbf{odd} result (``fails the test'') means your action succeeds. An even result means nothing happens, and the attempt is lost for the rest of the Scene.
+	
+	
+	\section{Magic in Action Scenes}
+	Every use of a magical effect (Tessere, Portal, Salve, Favor) during an Action Scene costs \textbf{2 AP} --- exactly like a Basic Maneuver.
+	
+	This is \textbf{in addition to} the effect's other costs (Hero Point, Lash, Port\'e's automatic Dramatic Wound) --- not instead of them.
+	
+	\subsection{Luck glamours}
+	
+	\BGHeader{Petty Luck MINOR}
+	
+	Activate this Glamour. For the rest of the Scene, after you make a Risk using your Minor Trait, if any of your dice show an odd result, you may reroll one of them. If the new result is even and no greater than twice your Rank in this Glamour, treat that die as a success.
+	
+	\BGHeader{Greater Luck MINOR}
+	Activate this Glamour. Reroll your odd dice one at a time, up to a number of times equal to your Rank in this Glamour, stopping as soon as one shows an even result — that die counts as a success. If that successful die shows a natural 10, it also Explodes.
+	
+	\BGHeader{Mad Luck MAJOR}
+	Activate this Glamour to grant a bonus die to up to your Rank in this glamour.  You may pass these
+	dice out to other Heroes who may keep that die for
+	all rolls for the rest of the Scene.
+	
+	\section{Rationale}
+	
+	Each edition of \textbf{7th Sea} solved a problem the other one had. Neither solved both.
+	
+	\vspace{1em}
+	\textbf{FIRST EDITION: COMPOUND GROWTH}
+	
+	In the original Roll \& Keep a Hero rolled Trait + Skill and kept Trait dice.
+	Advancement raised both numbers at once, so the two axes multiplied instead of
+	adding, and output climbed far faster than the character sheet suggested. It is a
+	textbook case of \underline{\href{https://en.wikipedia.org/wiki/Exponential_growth\#Exponential_growth_bias}{exponential growth}}
+	\underline{\href{https://en.wikipedia.org/wiki/Exponential_growth\#Exponential_growth_bias}{bias}}: compounding quantities get extrapolated in straight lines and badly underestimated.
+	
+	At the table, Target Numbers lost their meaning within a few sessions, the gap
+	between specialist and generalist widened at an accelerating rate, and the campaign
+	grew easier as it went — the opposite of what the genre needs.
+	
+	\vspace{1em}
+	\textbf{SECOND EDITION: THE COST OF THE FIX}
+	
+	Raises solved the mathematics completely. Scaling became predictable, difficulty
+	stayed stable, the arms race ended.
+	
+	The price was paid in the texture of play. Dice are combined into sets of ten, which
+	adds an optimisation pass to every roll, and the resulting Raises are a known budget
+	spent on actions declared afterwards. Holding four Raises, a player is not taking a
+	risk — they are allocating a resource, and the exchange is settled before it is
+	narrated. Good tactics, but it plays like chess.
+	
+	\newpage
+	\textbf{THIS MODIFICATION}
+	
+	Raises are replaced by Action Points, generated one at a time: each die is read on its own, and an even result is one Action Point. Maneuvers no longer cost a flat point apiece as a Raise did — the price list is differentiated, so committing to a Lunge is not the same decision as paying for a Parry. And Consequences are hidden, so an action cannot be priced and optimised before it is attempted. The surrounding frame — the round, Hero Points, Danger Points — is untouched.
+	
+	Every die is an independent coin flip, so expected output is exactly half the pool, at every stage of a campaign. Nothing compounds, because the keep threshold that drove the original problem is gone. The DL ladder means the same thing in the last session as in the first, and the GM comparing DL × 2 against the die pool is not using a heuristic but reading the arithmetic of the system directly.
+	
+	Points are counted rather than constructed, which removes the optimisation pass while leaving every decision that matters: which maneuver, how deep to commit to a Lunge, whether to take the Consequence.
+	
+	Duels keep the second edition rhythm — one roll, then Action Points spent across the round. Rolling dice for every single action breaks the tempo of an exchange and, with it, the mood at the table. The costs are what changed: they are set so that the Duelist Academy no longer buys a decisive edge over the rest of the party.
+	
+	The tension returns to the roll itself. The question is no longer how best to spend a budget of known value against known prices, but whether the dice will yield enough successes to reach the DL — and what the attempt will turn out to cost.
+	
+\end{document}
